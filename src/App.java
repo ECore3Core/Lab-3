@@ -3,29 +3,43 @@ import Vehicle.*;
 import Exceptions.*;
 
 public class App {
-    public static void main(String[] args) throws IOException, NoSuchModelNameException, DuplicateModelNameException{
-        // // Vehicle moto = Vehicles.readVehicle(new InputStreamReader(System.in));
-        // // OutputStream out = new FileOutputStream("Lab 3/src/output.bin");
-        // // Vehicles.outputVehicle(moto, out);
-        // // out.close();
-        // // InputStream in = new FileInputStream("Lab 3/src/output.bin");
-        // // Vehicle car1 = Vehicles.inputVehicle(in);
-        // // System.out.println(car1.getBrand());
-        // // for(String s : car1.getModelsNames()){
-        // //     System.out.println(s);
-        // // }
-        // Car car = new Car("BMW", 10);
-        // Writer out = new PrintWriter("Lab 3/src/output.txt");
-        // Vehicles.writeVehicle(car, out);
-        // Reader in = new FileReader("Lab 3/src/output.txt");
-        // Vehicle moto = Vehicles.readVehicle(in);
-        // System.out.println();
-        Car car = new Car("BMW", 10000);
-        Vehicles.outputVehicle(car, new FileOutputStream("output.bin"));
-        Vehicle car1 = Vehicles.inputVehicle(new FileInputStream("output.bin"));
-        System.out.println(car1.getBrand());
-        for(String s : car1.getModelsNames()){
-            System.out.println(s);
-        }
+    public static void main(String[] args) throws IOException, NoSuchModelNameException, DuplicateModelNameException, ClassNotFoundException{
+        //FileInputStream, FileOutputStream, FileReader и FileWriter
+        
+        
+        //тест outputVehicle
+        FileOutputStream out = new FileOutputStream("output1.bin");
+        Motorcycle car1 = new Motorcycle("BMW", 30);
+        Vehicles.outputVehicle(car1, out);
+
+        //тест inputVehicle
+        FileInputStream in = new FileInputStream("output1.bin");
+        Motorcycle car12 = (Motorcycle) Vehicles.inputVehicle(in);
+        //вывод
+        car12.printInfo();
+
+        //тест writeVehicle
+        FileWriter printIn = new FileWriter("output2.txt");
+        Motorcycle moto2 = new Motorcycle("Kawasaki", 59);
+        Vehicles.writeVehicle(moto2, printIn);
+
+        //тест readVehicle
+        FileReader readIn = new FileReader("output2.txt");
+        Motorcycle moto22 = (Motorcycle)Vehicles.readVehicle(readIn);
+        //вывод
+        moto22.printInfo();
+
+        //тест Serializable
+        ObjectOutputStream objOut = new ObjectOutputStream(new FileOutputStream("output3.bin"));
+        Car car3 = new Car("LADA", 50);
+        objOut.writeObject(car3);//записал
+
+        ObjectInputStream objIn = new ObjectInputStream(new FileInputStream("output3.bin"));
+        Car car32 = (Car)objIn.readObject();//считал
+        //вывод
+        car32.printInfo();
+
+        Vehicle moto42 = (Vehicle)Vehicles.readVehicle(new InputStreamReader(System.in));
+        Vehicles.writeVehicle(moto42, new OutputStreamWriter(System.out));
     }
 }

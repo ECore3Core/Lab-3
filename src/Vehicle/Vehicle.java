@@ -2,8 +2,9 @@ package Vehicle;
 
 import Exceptions.DuplicateModelNameException;
 import Exceptions.NoSuchModelNameException;
+import java.io.Serializable;
 
-public interface Vehicle {
+public interface Vehicle extends Serializable{
     String getBrand();
     void setBrand(String newBrand);
     void setModelName(String originalName, String newName) throws DuplicateModelNameException, NoSuchModelNameException;
@@ -14,4 +15,5 @@ public interface Vehicle {
     void addModel(String modelName, double modelPrice) throws DuplicateModelNameException;
     void deleteModel(String modelName) throws NoSuchModelNameException;
     int getModelsSize();
+    void printInfo();
 }

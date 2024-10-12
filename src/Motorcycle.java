@@ -37,25 +37,19 @@ class Motorcycle implements Vehicle{
         head.prev = head;
         lastModified = LocalDate.now();
     }
-    private LocalDate lastModified;
+    private transient LocalDate lastModified;
     private void updateLastModified(){
         lastModified = LocalDate.now();
-    }
-    public Motorcycle(){}
-    public Motorcycle(String brandName){
-        brand = brandName;
     }
     public Motorcycle(String brand, int modelLength){
         this.brand = brand;
         size = modelLength;
-        //Model p = head;
         for(int i = 0; i < modelLength; i++){
             Model model = new Model("Moto " + i, 100 + i);
             model.next = head;
             model.prev = head.prev;
             head.prev.next = model;
             head.prev = model;
-          //  p = p.next;
         }
     }
     private Model findModelByName(String name){
@@ -153,5 +147,13 @@ class Motorcycle implements Vehicle{
     }
     public int getModelsSize(){
         return size;
+    }
+    public void printInfo(){
+        System.out.println(brand);
+        Model p = head.next;
+        while(p != head){
+            System.out.println(p.getName() + " " + p.getPrice());
+            p = p.next;
+        }
     }
 }

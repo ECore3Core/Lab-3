@@ -25,7 +25,13 @@ public class Vehicles {
     public static void outputVehicle(Vehicle v, OutputStream out) throws IOException{
         DataOutputStream outputStream = new DataOutputStream(out);
 
-        byte[] bytes = v.getBrand().getBytes();
+        byte[] bytes = v.getClass().toString().getBytes();
+        outputStream.writeInt(bytes.length);
+        for(byte b : bytes){
+            outputStream.writeByte(b);
+        }
+
+        bytes = v.getBrand().getBytes();
         int n = bytes.length;
         outputStream.writeInt(n);
         for(int i = 0; i < n; i++){
@@ -51,16 +57,34 @@ public class Vehicles {
         DataInputStream inputStream = new DataInputStream(in);
 
         int size = inputStream.readInt();
-        
         byte[] bytes = new byte[size];
+        for(int i = 0; i < size; i++){
+            bytes[i] = inputStream.readByte();
+        }
+        String className = new String(bytes);
+
+        size = inputStream.readInt();
+        
+        bytes = new byte[size];
         for(int i = 0; i < size; i++){
             bytes[i] = inputStream.readByte();
         }
         String brandName = new String(bytes);
 
-        size = inputStream.readInt();
-        Vehicle vehicle = new Car(brandName);
+        Vehicle vehicle;
+        switch(className){
+            case "class Car":
+                vehicle = new Car(brandName, 0);
+                break;
+            case "class Motorcycle":
+                vehicle = new Motorcycle(brandName, 0);
+                break;
+            default:
+                vehicle = new Car(brandName, 0);
+                break;
+        }
 
+        size = inputStream.readInt();
         for(int i = 0; i < size; i++){
             int nameLength = inputStream.readInt();
             bytes = new byte[nameLength];
@@ -77,7 +101,14 @@ public class Vehicles {
     }
     public static void writeVehicle(Vehicle vehicle, Writer out){
         PrintWriter printWriter = new PrintWriter(out);
+
+        printWriter.println(vehicle.getClass());
+
         printWriter.println(vehicle.getBrand());
+
+        printWriter.println(vehicle.getModelsSize());
+
+        printWriter.println(vehicle.getModelsSize());
         for(int i = 0; i < vehicle.getModelsSize(); i++){
             printWriter.print(vehicle.getModelsNames()[i] + " ");
             printWriter.println(vehicle.getModelsPrices()[i]);
@@ -86,10 +117,29 @@ public class Vehicles {
     }
     public static Vehicle readVehicle(Reader in) throws IOException, DuplicateModelNameException{
         BufferedReader bfReader = new BufferedReader(in);
+
+        String className = bfReader.readLine();
+
         String brandName = bfReader.readLine();
-        Vehicle vehicle = new Car(brandName);
+
+        int size = Integer.parseInt(bfReader.readLine().trim());
+
+        Vehicle vehicle;
+        switch(className){
+            case "class Car":
+                vehicle = new Car(brandName, 0);
+                break;
+            case "class Motorcycle":
+                vehicle = new Motorcycle(brandName, 0);
+                break;
+            default:
+                vehicle = new Car(brandName, 0);
+                break;
+        }
         String nextModel = bfReader.readLine();
-        while(nextModel != null){
+        int num = 0;
+        while(nextModel != null && num < size){
+            num++;
             String[] info = nextModel.split(" ");
             String modelName = "";
             for(int i = 0; i < info.length - 1; i++){
@@ -97,8 +147,8 @@ public class Vehicles {
             }
             vehicle.addModel(modelName, Double.parseDouble(info[info.length - 1]));
             nextModel = bfReader.readLine();
+            
         }
-        bfReader.close();
         return vehicle;
     }
 }   

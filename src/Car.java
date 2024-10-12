@@ -28,11 +28,6 @@ class Car implements Vehicle{
         }
     }
     private Model[] models;
-    public Car(){}
-    public Car(String brandName){
-        brand = brandName;
-        models = new Model[0];
-    }
     public Car(String brand, int modelsLength){
         this.brand = brand;
         models = new Model[modelsLength];
@@ -50,16 +45,17 @@ class Car implements Vehicle{
         return index;
     }
     public void setModelName(String originalModel, String newName) throws DuplicateModelNameException, NoSuchModelNameException{
-        int indexOfOriginalModel = findIndexOfModel(originalModel);
-        if(indexOfOriginalModel == -1){
-            throw new NoSuchModelNameException("Машины под названием " + originalModel + " не существует.\n");
+        
+        boolean exist = false;
+        int index = 0;
+        for(int i = 0; i < getModelsSize(); i++){
+            if(models[i].getName() == newName){throw new DuplicateModelNameException("s");}
+            else if (models[i].getName() == originalModel){exist = true; index = i;}
         }
-        else if(findIndexOfModel(newName) != -1){
-            throw new DuplicateModelNameException("Машина под названием " + newName + " уже существует.\n");
+        if(!exist){
+            throw new NoSuchModelNameException("sd");
         }
-        else{
-            models[indexOfOriginalModel].setName(newName);
-        }
+        models[index].setName(newName);
     }
     public String[] getModelsNames(){
         String[] modelsNames = new String[models.length];
@@ -119,5 +115,11 @@ class Car implements Vehicle{
     }
     public int getModelsSize(){
         return models.length;
+    }
+    public void printInfo(){
+        System.out.println(brand);
+        for(Model m : models){
+            System.out.println(m.getName() + " " + m.getPrice());
+        }
     }
 }
